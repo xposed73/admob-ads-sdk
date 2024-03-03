@@ -2,8 +2,6 @@ package com.solodroid.ads.sdk.format;
 
 import static com.solodroid.ads.sdk.util.Constant.ADMOB;
 import static com.solodroid.ads.sdk.util.Constant.AD_STATUS_ON;
-import static com.solodroid.ads.sdk.util.Constant.FACEBOOK;
-import static com.solodroid.ads.sdk.util.Constant.FAN;
 import static com.solodroid.ads.sdk.util.Constant.FAN_BIDDING_ADMOB;
 import static com.solodroid.ads.sdk.util.Constant.FAN_BIDDING_AD_MANAGER;
 import static com.solodroid.ads.sdk.util.Constant.GOOGLE_AD_MANAGER;
@@ -41,6 +39,7 @@ public class RewardedAd {
         private String applovinDiscRewardedZoneId = "";
         private String ironSourceRewardedId = "";
         private String wortiseRewardedId = "";
+        private String alienAdsRewardedId = "";
         private int placementStatus = 1;
         private boolean legacyGDPR = false;
 
@@ -110,6 +109,11 @@ public class RewardedAd {
 
         public Builder setWortiseRewardedId(String wortiseRewardedId) {
             this.wortiseRewardedId = wortiseRewardedId;
+            return this;
+        }
+
+        public Builder setAlienAdsRewardedId(String alienAdsRewardedId) {
+            this.alienAdsRewardedId = alienAdsRewardedId;
             return this;
         }
 

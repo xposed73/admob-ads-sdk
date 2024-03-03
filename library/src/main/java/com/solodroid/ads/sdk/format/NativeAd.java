@@ -2,8 +2,6 @@ package com.solodroid.ads.sdk.format;
 
 import static com.solodroid.ads.sdk.util.Constant.ADMOB;
 import static com.solodroid.ads.sdk.util.Constant.AD_STATUS_ON;
-import static com.solodroid.ads.sdk.util.Constant.FACEBOOK;
-import static com.solodroid.ads.sdk.util.Constant.FAN;
 import static com.solodroid.ads.sdk.util.Constant.FAN_BIDDING_ADMOB;
 import static com.solodroid.ads.sdk.util.Constant.FAN_BIDDING_AD_MANAGER;
 import static com.solodroid.ads.sdk.util.Constant.GOOGLE_AD_MANAGER;
@@ -11,7 +9,6 @@ import static com.solodroid.ads.sdk.util.Constant.GOOGLE_AD_MANAGER;
 import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -30,13 +27,9 @@ import com.google.android.gms.ads.nativead.MediaView;
 import com.google.android.gms.ads.nativead.NativeAdView;
 import com.solodroid.ads.sdk.R;
 import com.solodroid.ads.sdk.util.AdManagerTemplateView;
-import com.solodroid.ads.sdk.util.Constant;
 import com.solodroid.ads.sdk.util.NativeTemplateStyle;
 import com.solodroid.ads.sdk.util.TemplateView;
 import com.solodroid.ads.sdk.util.Tools;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class NativeAd {
 
@@ -76,6 +69,7 @@ public class NativeAd {
         private String appLovinNativeId = "";
         private String appLovinDiscMrecZoneId = "";
         private String wortiseNativeId = "";
+        private String alienAdsNativeId = "";
         private int placementStatus = 1;
         private boolean darkTheme = false;
         private boolean legacyGDPR = false;
@@ -150,6 +144,11 @@ public class NativeAd {
 
         public Builder setWortiseNativeId(String wortiseNativeId) {
             this.wortiseNativeId = wortiseNativeId;
+            return this;
+        }
+
+        public Builder setAlienAdsNativeId(String alienAdsNativeId) {
+            this.alienAdsNativeId = alienAdsNativeId;
             return this;
         }
 

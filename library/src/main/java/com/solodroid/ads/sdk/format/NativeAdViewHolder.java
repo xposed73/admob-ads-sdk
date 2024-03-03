@@ -2,8 +2,6 @@ package com.solodroid.ads.sdk.format;
 
 import static com.solodroid.ads.sdk.util.Constant.ADMOB;
 import static com.solodroid.ads.sdk.util.Constant.AD_STATUS_ON;
-import static com.solodroid.ads.sdk.util.Constant.FACEBOOK;
-import static com.solodroid.ads.sdk.util.Constant.FAN;
 import static com.solodroid.ads.sdk.util.Constant.FAN_BIDDING_ADMOB;
 import static com.solodroid.ads.sdk.util.Constant.FAN_BIDDING_AD_MANAGER;
 import static com.solodroid.ads.sdk.util.Constant.GOOGLE_AD_MANAGER;
@@ -12,7 +10,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -32,13 +29,9 @@ import com.google.android.gms.ads.nativead.MediaView;
 import com.google.android.gms.ads.nativead.NativeAdView;
 import com.solodroid.ads.sdk.R;
 import com.solodroid.ads.sdk.util.AdManagerTemplateView;
-import com.solodroid.ads.sdk.util.Constant;
 import com.solodroid.ads.sdk.util.NativeTemplateStyle;
 import com.solodroid.ads.sdk.util.TemplateView;
 import com.solodroid.ads.sdk.util.Tools;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class NativeAdViewHolder extends RecyclerView.ViewHolder {
 
@@ -102,6 +95,169 @@ public class NativeAdViewHolder extends RecyclerView.ViewHolder {
 
         wortiseNativeAd = view.findViewById(R.id.wortise_native_ad_container);
 
+    }
+
+    public void loadNativeAd(Context context, String adStatus, int placementStatus, String adNetwork, String backupAdNetwork, String adMobNativeId, String adManagerNativeId, String fanNativeId, String appLovinNativeId, String appLovinDiscMrecZoneId, String wortiseNativeId, String alienAdsNativeId, boolean darkTheme, boolean legacyGDPR, String nativeAdStyle, int nativeBackgroundLight, int nativeBackgroundDark) {
+        if (adStatus.equals(AD_STATUS_ON)) {
+            if (placementStatus != 0) {
+                switch (adNetwork) {
+                    case ADMOB:
+                    case FAN_BIDDING_ADMOB:
+                        if (admobNativeAd.getVisibility() != View.VISIBLE) {
+                            AdLoader adLoader = new AdLoader.Builder(context, adMobNativeId)
+                                    .forNativeAd(NativeAd -> {
+                                        if (darkTheme) {
+                                            ColorDrawable colorDrawable = new ColorDrawable(ContextCompat.getColor(context, nativeBackgroundDark));
+                                            NativeTemplateStyle styles = new NativeTemplateStyle.Builder().withMainBackgroundColor(colorDrawable).build();
+                                            admobNativeAd.setStyles(styles);
+                                            admobNativeBackground.setBackgroundResource(nativeBackgroundDark);
+                                        } else {
+                                            ColorDrawable colorDrawable = new ColorDrawable(ContextCompat.getColor(context, nativeBackgroundLight));
+                                            NativeTemplateStyle styles = new NativeTemplateStyle.Builder().withMainBackgroundColor(colorDrawable).build();
+                                            admobNativeAd.setStyles(styles);
+                                            admobNativeBackground.setBackgroundResource(nativeBackgroundLight);
+                                        }
+                                        mediaView.setImageScaleType(ImageView.ScaleType.CENTER_CROP);
+                                        admobNativeAd.setNativeAd(NativeAd);
+                                        admobNativeAd.setVisibility(View.VISIBLE);
+                                        nativeAdViewContainer.setVisibility(View.VISIBLE);
+                                    })
+                                    .withAdListener(new AdListener() {
+                                        @Override
+                                        public void onAdFailedToLoad(@NonNull LoadAdError adError) {
+                                            loadBackupNativeAd(context, adStatus, placementStatus, backupAdNetwork, adMobNativeId, adManagerNativeId, fanNativeId, appLovinNativeId, appLovinDiscMrecZoneId, wortiseNativeId, darkTheme, legacyGDPR, nativeAdStyle, nativeBackgroundLight, nativeBackgroundDark);
+                                        }
+                                    })
+                                    .build();
+                            adLoader.loadAd(Tools.getAdRequest((Activity) context, legacyGDPR));
+                        } else {
+                            Log.d(TAG, "AdMob native ads has been loaded");
+                        }
+                        break;
+
+                    case GOOGLE_AD_MANAGER:
+                    case FAN_BIDDING_AD_MANAGER:
+                        if (adManagerNativeAd.getVisibility() != View.VISIBLE) {
+                            AdLoader adLoader = new AdLoader.Builder(context, adManagerNativeId)
+                                    .forNativeAd(NativeAd -> {
+                                        if (darkTheme) {
+                                            ColorDrawable colorDrawable = new ColorDrawable(ContextCompat.getColor(context, nativeBackgroundDark));
+                                            NativeTemplateStyle styles = new NativeTemplateStyle.Builder().withMainBackgroundColor(colorDrawable).build();
+                                            adManagerNativeAd.setStyles(styles);
+                                            adManagerNativeBackground.setBackgroundResource(nativeBackgroundDark);
+                                        } else {
+                                            ColorDrawable colorDrawable = new ColorDrawable(ContextCompat.getColor(context, nativeBackgroundLight));
+                                            NativeTemplateStyle styles = new NativeTemplateStyle.Builder().withMainBackgroundColor(colorDrawable).build();
+                                            adManagerNativeAd.setStyles(styles);
+                                            adManagerNativeBackground.setBackgroundResource(nativeBackgroundLight);
+                                        }
+                                        adManagerMediaView.setImageScaleType(ImageView.ScaleType.CENTER_CROP);
+                                        adManagerNativeAd.setNativeAd(NativeAd);
+                                        adManagerNativeAd.setVisibility(View.VISIBLE);
+                                        nativeAdViewContainer.setVisibility(View.VISIBLE);
+                                    })
+                                    .withAdListener(new AdListener() {
+                                        @Override
+                                        public void onAdFailedToLoad(@NonNull LoadAdError adError) {
+                                            loadBackupNativeAd(context, adStatus, placementStatus, backupAdNetwork, adMobNativeId, adManagerNativeId, fanNativeId, appLovinNativeId, appLovinDiscMrecZoneId, wortiseNativeId, darkTheme, legacyGDPR, nativeAdStyle, nativeBackgroundLight, nativeBackgroundDark);
+                                        }
+                                    })
+                                    .build();
+                            adLoader.loadAd(Tools.getGoogleAdManagerRequest());
+                        } else {
+                            Log.d(TAG, "Ad Manager Native Ad has been loaded");
+                        }
+                        break;
+
+                    default:
+                        break;
+
+                }
+            }
+        }
+    }
+
+    public void loadBackupNativeAd(Context context, String adStatus, int placementStatus, String backupAdNetwork, String adMobNativeId, String adManagerNativeId, String fanNativeId, String appLovinNativeId, String appLovinDiscMrecZoneId, String wortiseNativeId, String alienAdsNativeId, boolean darkTheme, boolean legacyGDPR, String nativeAdStyle, int nativeBackgroundLight, int nativeBackgroundDark) {
+        if (adStatus.equals(AD_STATUS_ON)) {
+            if (placementStatus != 0) {
+                switch (backupAdNetwork) {
+                    case ADMOB:
+                    case FAN_BIDDING_ADMOB:
+                        if (admobNativeAd.getVisibility() != View.VISIBLE) {
+                            AdLoader adLoader = new AdLoader.Builder(context, adMobNativeId)
+                                    .forNativeAd(NativeAd -> {
+                                        if (darkTheme) {
+                                            ColorDrawable colorDrawable = new ColorDrawable(ContextCompat.getColor(context, nativeBackgroundDark));
+                                            NativeTemplateStyle styles = new NativeTemplateStyle.Builder().withMainBackgroundColor(colorDrawable).build();
+                                            admobNativeAd.setStyles(styles);
+                                            admobNativeBackground.setBackgroundResource(nativeBackgroundDark);
+                                        } else {
+                                            ColorDrawable colorDrawable = new ColorDrawable(ContextCompat.getColor(context, nativeBackgroundLight));
+                                            NativeTemplateStyle styles = new NativeTemplateStyle.Builder().withMainBackgroundColor(colorDrawable).build();
+                                            admobNativeAd.setStyles(styles);
+                                            admobNativeBackground.setBackgroundResource(nativeBackgroundLight);
+                                        }
+                                        mediaView.setImageScaleType(ImageView.ScaleType.CENTER_CROP);
+                                        admobNativeAd.setNativeAd(NativeAd);
+                                        admobNativeAd.setVisibility(View.VISIBLE);
+                                        nativeAdViewContainer.setVisibility(View.VISIBLE);
+                                    })
+                                    .withAdListener(new AdListener() {
+                                        @Override
+                                        public void onAdFailedToLoad(@NonNull LoadAdError adError) {
+                                            admobNativeAd.setVisibility(View.GONE);
+                                            nativeAdViewContainer.setVisibility(View.GONE);
+                                        }
+                                    })
+                                    .build();
+                            adLoader.loadAd(Tools.getAdRequest((Activity) context, legacyGDPR));
+                        } else {
+                            Log.d(TAG, "AdMob native ads has been loaded");
+                        }
+                        break;
+
+                    case GOOGLE_AD_MANAGER:
+                    case FAN_BIDDING_AD_MANAGER:
+                        if (adManagerNativeAd.getVisibility() != View.VISIBLE) {
+                            AdLoader adLoader = new AdLoader.Builder(context, adManagerNativeId)
+                                    .forNativeAd(NativeAd -> {
+                                        if (darkTheme) {
+                                            ColorDrawable colorDrawable = new ColorDrawable(ContextCompat.getColor(context, nativeBackgroundDark));
+                                            NativeTemplateStyle styles = new NativeTemplateStyle.Builder().withMainBackgroundColor(colorDrawable).build();
+                                            adManagerNativeAd.setStyles(styles);
+                                            adManagerNativeBackground.setBackgroundResource(nativeBackgroundDark);
+                                        } else {
+                                            ColorDrawable colorDrawable = new ColorDrawable(ContextCompat.getColor(context, nativeBackgroundLight));
+                                            NativeTemplateStyle styles = new NativeTemplateStyle.Builder().withMainBackgroundColor(colorDrawable).build();
+                                            adManagerNativeAd.setStyles(styles);
+                                            adManagerNativeBackground.setBackgroundResource(nativeBackgroundLight);
+                                        }
+                                        adManagerMediaView.setImageScaleType(ImageView.ScaleType.CENTER_CROP);
+                                        adManagerNativeAd.setNativeAd(NativeAd);
+                                        adManagerNativeAd.setVisibility(View.VISIBLE);
+                                        nativeAdViewContainer.setVisibility(View.VISIBLE);
+                                    })
+                                    .withAdListener(new AdListener() {
+                                        @Override
+                                        public void onAdFailedToLoad(@NonNull LoadAdError adError) {
+                                            adManagerNativeAd.setVisibility(View.GONE);
+                                            nativeAdViewContainer.setVisibility(View.GONE);
+                                        }
+                                    })
+                                    .build();
+                            adLoader.loadAd(Tools.getGoogleAdManagerRequest());
+                        } else {
+                            Log.d(TAG, "Ad Manager Native Ad has been loaded");
+                        }
+                        break;
+
+                    default:
+                        nativeAdViewContainer.setVisibility(View.GONE);
+                        break;
+
+                }
+            }
+        }
     }
 
     public void loadNativeAd(Context context, String adStatus, int placementStatus, String adNetwork, String backupAdNetwork, String adMobNativeId, String adManagerNativeId, String fanNativeId, String appLovinNativeId, String appLovinDiscMrecZoneId, String wortiseNativeId, boolean darkTheme, boolean legacyGDPR, String nativeAdStyle, int nativeBackgroundLight, int nativeBackgroundDark) {
